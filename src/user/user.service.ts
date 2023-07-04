@@ -29,10 +29,6 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
   async findByEmail(email: string) {
     return await this.prisma.users.findFirst({
       where: {
@@ -41,11 +37,4 @@ export class UserService {
     })
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }
