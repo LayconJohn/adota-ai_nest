@@ -30,7 +30,7 @@ model sessions {
 model users {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamp(6)
-  email      String   @db.VarChar(255)
+  email      String   @db.VarChar(255) @unique
   nome       String   @db.VarChar(255)
   senha      String   @db.VarChar(255)
   cpf        String   @db.VarChar(255)
