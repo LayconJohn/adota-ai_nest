@@ -1,16 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('pet')
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
   @Post()
-  create(@Body() createPetDto: CreatePetDto) {
-    return this.petService.create(createPetDto);
-  }
+  async create(@Body() createPetDto: CreatePetDto, @CurrentUser() user:User) {
+    try {
+      return await this.petService.create(createPetDto, user.id);
+    } catch (error) {
+        return new HttpException({
+          status: HttpStatus.BAD_REQUEST,
+          error: "Não foi possível cadastrar o pet"
+        }, HttpStatus.BAD_REQUEST)
+      }
+    }
+  
 
   @Get()
   findAll() {

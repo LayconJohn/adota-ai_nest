@@ -1,11 +1,28 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 
 @Injectable()
 export class PetService {
-  create(createPetDto: CreatePetDto) {
-    return 'This action adds a new pet';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createPetDto: CreatePetDto, userId: number) {
+    const createdPet =  await this.prisma.pets.create({
+      data: {
+        ...createPetDto,
+        userId: userId,
+        adotado: false
+      },
+      include:{
+        users: {
+          select: {
+            nome: true
+          }
+        }
+      }
+    })
+    return createdPet;
   }
 
   findAll() {
