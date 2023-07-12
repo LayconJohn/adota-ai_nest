@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
@@ -7,9 +7,16 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @IsPublic()
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    try {
+      return await this.userService.create(createUserDto);
+    } catch (error) {
+      return new HttpException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        error: "Senha e confirmar Senha devem ser iguais"
+      }, HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+    
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from "bcrypt";
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UnprocessableEntityError } from 'src/auth/errors/unprocessableEntity.error';
 
 @Injectable()
 export class UserService {
@@ -10,7 +10,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     if (createUserDto.senha !== createUserDto.confirmarSenha) {
-      throw new Error("Senha e confirmar senha devem ser iguais");
+      throw new UnprocessableEntityError();
     }
 
     const userData = {

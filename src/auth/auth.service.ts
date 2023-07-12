@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
 import { UserPayload } from 'src/auth/models/UserPayload';
 import { UserToken } from 'src/auth/models/UserToken';
+import { BadRequestError } from './errors/badRequest.error';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
                 }
             }
         }
-        throw new Error("Email ou Senha Estão incorretos");
+        throw new BadRequestError("Email ou Senha Estão incorretos");
       }
 
     login(user: User): UserToken {
