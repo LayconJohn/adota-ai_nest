@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Request, ParseIntPipe, Query } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
@@ -20,12 +20,19 @@ export class PetController {
           error: "Não foi possível cadastrar o pet"
         }, HttpStatus.BAD_REQUEST)
       }
-    }
-  
+  }
+
   @IsPublic()
   @Get()
-  findAll() {
-    return this.petService.findAll();
+  async findAll(@Query('page', ParseIntPipe) page: number) {
+    try {
+      return await this.petService.findAll(page);
+    } catch (error) {
+      return new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: "Insira uma página válida"
+      }, HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Get(':id')

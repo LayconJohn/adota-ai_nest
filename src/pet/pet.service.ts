@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { BadRequestError } from 'src/auth/errors/badRequest.error';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
@@ -25,13 +26,30 @@ export class PetService {
     return createdPet;
   }
 
-  async findAll() {
+  async findAll(page: number) {
+    if (page < 1) {
+      throw new BadRequestError("Insira uma página válida")
+    }
+    let firstPet = 0;
+    let lastPet = 10;
+    if (page > 1) {
+      firstPet = (page * 10) - 10;
+      lastPet = page * 10;
+    }
+
     const pets = await this.prisma.pets.findMany({
       where:{
         adotado: false
+      },
+      include: {
+        users: {
+          select:{
+            nome: true
+          }
+        }
       }
     });
-    return pets;
+    return pets.reverse().slice(firstPet, lastPet);
   }
 
   findOne(id: number) {
