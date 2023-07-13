@@ -4,6 +4,7 @@ import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('pet')
 export class PetController {
@@ -21,7 +22,7 @@ export class PetController {
       }
     }
   
-
+  @IsPublic()
   @Get()
   findAll() {
     return this.petService.findAll();

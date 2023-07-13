@@ -25,8 +25,13 @@ export class PetService {
     return createdPet;
   }
 
-  findAll() {
-    return `This action returns all pet`;
+  async findAll() {
+    const pets = await this.prisma.pets.findMany({
+      where:{
+        adotado: false
+      }
+    });
+    return pets;
   }
 
   findOne(id: number) {
@@ -41,3 +46,5 @@ export class PetService {
     return `This action removes a #${id} pet`;
   }
 }
+
+
