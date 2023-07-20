@@ -36,8 +36,23 @@ export class PetController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.petService.findOne(+id);
+    } catch (error) {
+      if (error.message === "BAD_REQUEST") {
+        return new HttpException({
+          status: HttpStatus.BAD_REQUEST,
+          error: "Insira um id válido"
+        }, HttpStatus.BAD_REQUEST);
+      }
+      if (error.message === "NOT_FOUND") {
+        return new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: "Pet não encontrado"
+        }, HttpStatus.NOT_FOUND);
+      }
+    }
   }
 
   @Patch(':id')
