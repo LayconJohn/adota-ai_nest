@@ -106,10 +106,6 @@ export class PetService {
       }
     })
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} pet`;
-  }
 }
 
 
