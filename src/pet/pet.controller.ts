@@ -56,8 +56,27 @@ export class PetController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
-    return this.petService.update(+id, updatePetDto);
+  async update(@Param('id') id: string, @CurrentUser() user:User) {
+    try {
+      return await this.petService.update(+id, user);
+    } catch (error) {
+      if (error.message === "UNAUTHORIZED") {
+        return new HttpException({
+          status: HttpStatus.UNAUTHORIZED,
+          error: "Esse pet não é autorizado para esse usuário"
+        }, HttpStatus.UNAUTHORIZED);
+      }
+      if (error.message === "NOT_FOUND") {
+        return new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: "Pet não encontrado"
+        }, HttpStatus.NOT_FOUND);
+      }
+      return new HttpException({
+        status: HttpStatus.UNAUTHORIZED,
+        error: "Esse pet não é autorizado para esse usuário"
+      }, HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @Delete(':id')

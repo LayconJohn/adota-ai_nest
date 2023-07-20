@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { BadRequestError } from 'src/auth/errors/badRequest.error';
 import { NotFoundError } from 'src/auth/errors/notFound.error';
+import { UnauthorizedError } from 'src/auth/errors/unauthorized.error';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
 
@@ -76,8 +78,33 @@ export class PetService {
     return pet
   }
 
-  update(id: number, updatePetDto: UpdatePetDto) {
-    return `This action updates a #${id} pet`;
+  async update(id: number, user: User) {
+    if (id < 0 || isNaN(id)) {
+      throw new BadRequestError("BAD_REQUEST");
+    }
+
+    const pet = await this.prisma.pets.findFirst({
+      where: {
+        id
+      }
+    })
+    if (!pet) {
+      if (!pet) {
+        throw new NotFoundError("NOT_FOUND")
+      }
+    }
+    if (user.id !== pet.userId) {
+      throw new UnauthorizedError("UNAUTHORIZED")
+    }
+
+    return await this.prisma.pets.update({
+      where: {
+        id
+      },
+      data: {
+        adotado: true
+      }
+    })
   }
 
   remove(id: number) {

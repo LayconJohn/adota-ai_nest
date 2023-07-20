@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString, Matches } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString, Matches } from "class-validator";
 import { Pet } from "../entities/pet.entity";
 
 export class CreatePetDto extends Pet {
