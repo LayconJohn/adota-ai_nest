@@ -10,7 +10,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     if (createUserDto.senha !== createUserDto.confirmarSenha) {
-      throw new UnprocessableEntityError();
+      throw new UnprocessableEntityError("UNPROCESSABLE_ENTITY");
     }
 
     const userData = {
