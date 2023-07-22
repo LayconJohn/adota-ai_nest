@@ -5,13 +5,14 @@ import { UpdatePetDto } from './dto/update-pet.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('pets')
 @Controller('pet')
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
+  @ApiBearerAuth()
   @Post()
   async create(@Body() createPetDto: CreatePetDto, @CurrentUser() user:User) {
     try {
@@ -37,6 +38,7 @@ export class PetController {
     }
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -57,6 +59,7 @@ export class PetController {
     }
   }
 
+  @ApiBearerAuth()
   @Patch(':id')
   async update(@Param('id') id: string, @CurrentUser() user:User) {
     try {
