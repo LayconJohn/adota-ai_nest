@@ -1,5 +1,5 @@
 import { Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
 import { AuthService } from './auth.service';
