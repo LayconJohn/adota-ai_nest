@@ -5,7 +5,9 @@ import { UpdatePetDto } from './dto/update-pet.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('pets')
 @Controller('pet')
 export class PetController {
   constructor(private readonly petService: PetService) {}
