@@ -14,6 +14,8 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
   .setTitle('Documentação com Swagger - Adota Aí')
   .setDescription(
