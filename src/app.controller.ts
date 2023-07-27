@@ -18,6 +18,7 @@ export class AppController {
   @ApiBearerAuth()
   @Get('me')
   getMe(@CurrentUser() user:User){
+    console.log(user);
     return user;
   }
 }

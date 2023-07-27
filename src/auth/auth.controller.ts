@@ -16,7 +16,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     login(@Request() req: AuthRequest) {
         try {
-            return this.authService.login(req.user);
+            return this.authService.login(req.body);
         } catch (error) {
             return new HttpException({
                 status: HttpStatus.UNPROCESSABLE_ENTITY,
