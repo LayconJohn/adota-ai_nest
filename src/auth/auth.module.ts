@@ -5,6 +5,8 @@ import { LocalStrategy } from 'src/auth/strategies/local.strategy';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
@@ -16,7 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }
   })],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, LocalStrategy, JwtStrategy, LocalAuthGuard, JwtAuthGuard]
 })
 export class AuthModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

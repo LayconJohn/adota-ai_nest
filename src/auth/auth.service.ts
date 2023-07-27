@@ -10,18 +10,18 @@ import { BadRequestError } from './errors/badRequest.error';
 @Injectable()
 export class AuthService {
     constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
-    async validateUser(email: string, senha: string): Promise<User> {
+    async validateUser(email: string, password: string): Promise<Partial<User>> {
         const user: User = await this.userService.findByEmail(email); 
-        if (user) {
-            const passwordIsValid = await bcryt.compare(senha, user.senha);
-            if (passwordIsValid) {
-                return {
-                    ...user,
-                    senha: undefined
-                }
-            }
+        if (!user) {
+            throw new BadRequestError("Email ou Senha Estão incorretos");
         }
-        throw new BadRequestError("Email ou Senha Estão incorretos");
+        
+        const passwordIsValid = await bcryt.compare(password, user.senha);
+        if (passwordIsValid) {
+            const { senha, ...returnUser } = user;
+            return returnUser;
+        }
+        
       }
 
     login(user: User): UserToken {

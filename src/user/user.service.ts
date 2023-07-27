@@ -23,10 +23,8 @@ export class UserService {
       data: userData
     })
 
-    return {
-      ...createdUser,
-      senha: undefined
-    }
+    const { senha, ...returnUser } = createdUser;
+    return returnUser;
   }
 
   async findByEmail(email: string) {
