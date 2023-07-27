@@ -10,6 +10,7 @@ export class UserController {
 
   @ApiTags('users')
   @ApiBearerAuth()
+  @IsPublic()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {

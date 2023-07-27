@@ -1,5 +1,5 @@
-import { Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode, HttpStatus, Post, UseGuards, Request, HttpException } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
 import { AuthService } from './auth.service';
@@ -10,11 +10,19 @@ export class AuthController {
     constructor(private readonly authService: AuthService){}
 
     @ApiTags('auth')
-    @Post('login')
     @IsPublic()
-    @HttpCode(HttpStatus.OK)
     @UseGuards(LocalAuthGuard)
+    @Post('login')
+    @HttpCode(HttpStatus.OK)
     login(@Request() req: AuthRequest) {
-        return this.authService.login(req.user);
+        try {
+            return this.authService.login(req.user);
+        } catch (error) {
+            return new HttpException({
+                status: HttpStatus.UNPROCESSABLE_ENTITY,
+                error: "Email ou senha errados"
+              }, HttpStatus.UNPROCESSABLE_ENTITY)
+        }
+        
     }
 }
